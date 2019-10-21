@@ -38,10 +38,32 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    "cookie-universal-nuxt",
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+
+    'nuxt-fontawesome',
+    //OR like this
+    ['nuxt-fontawesome', {
+      component: 'fa', 
+      imports: [
+        //import whole set
+        {
+          set: '@fortawesome/free-solid-svg-icons',
+          icons: ['fas']
+        },
+        //import 2 icons from set 
+        // please note this is PRO set in this example, 
+        // you must have it in your node_modules to actually import
+        {
+          set: '@fortawesome/pro-regular-svg-icons',
+          icons: ['faAdjust', 'faArchive']
+        }
+      ]
+    }],
+
   ],
   /*
   ** Axios module configuration

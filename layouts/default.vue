@@ -4,7 +4,69 @@
   </div>
 </template>
 
+<script>
+export default {
+  computed: {
+    token() {
+      return this.$store.getters['login/getToken']
+    },
+    user(){
+      return this.$store.getters['user/getUser']
+    },
+    myplaylist(){
+      return this.$store.getters['playlist/getMyPlaylists']
+    }
+  },
+  
+ async mounted(){
+        let cookieToken = this.$cookies.get('auth_token') 
+        let cookieUser = this.$cookies.get('user') 
+        if(cookieUser == undefined || cookieUser == {}){
+              this.$cookies.set('user', this.user)
+           }    
+        if(cookieToken  == undefined || cookieToken == ''){
+              this.$cookies.set('auth_token', this.token)
+              this.$router.push('/login')
+             return
+          }
+        this.$store.commit('login/setState', cookieToken);
+        this.$cookies.set('auth_token', cookieToken)
+        this.$store.commit('user/setUser', await this.fetchUser());
+        this.$cookies.set('user', this.user)
+
+
+        //DA FARE LUNEDI
+        //this.$store.commit('playlist/setMyPlaylists', {userid: this.user.id, token: this.token});
+        //provare con dispatch
+        //this.$store.commit('playlist/setMyPlaylists', {userid: this.user.id, token: this.token});
+        //console.log("myplaylist: ", this.myplaylist)
+
+        
+        console.log("user: ", cookieUser),
+        console.log("auth_token: ", cookieToken)
+     
+  },
+  methods: {
+async fetchUser () {
+            const {data} = await this.$axios({
+                    method:'get',
+                    url:'https://api.spotify.com/v1/me',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + this.token
+                    }
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    })
+            return data
+        }
+  }
+}
+</script>
+
 <style>
+
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -47,9 +109,10 @@ html {
   padding: 10px 30px;
   margin-left: 15px;
 }
-
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
 }
+
+
 </style>

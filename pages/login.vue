@@ -3,22 +3,11 @@
       <div id="login">
         <h1>Login in with Spotify</h1>
         <a @click="gotoPage" class="btn btn-primary">Log in with Spotify</a>
-      </div>
-      <div id="loggedin">
-        <div id="user-profile">
-        </div>
-        <div id="oauth">
-        </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-  
-</div>
+      </div>  
   </div>
 </template>
 
 <script>
-
-
-
 export default {
   components: {
   },
@@ -37,7 +26,7 @@ methods:{
          client_secret: '2fd0602c8e114147926ce1086a531c4b',
          response_type: 'token',
          redirect_uri: 'http://localhost:3000/callback',
-         scope: 'user-read-private user-read-email',
+         scope: 'user-read-private user-follow-modify user-follow-read user-read-recently-played user-top-read user-library-read user-read-email playlist-read-collaborative playlist-modify-private playlist-modify-public playlist-read-private user-library-modify',
       }
   },
 }
