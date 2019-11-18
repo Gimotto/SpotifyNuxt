@@ -1,6 +1,17 @@
 <template>
   <div>
+    <!--b-modal ref="loginModal" id="loginModal" :visible="!this.tokenValid" @hidden="toggleModal()" ok-only no-close-on-backdrop no-close-on-esc hide-header >Token scaduto, clicca ok per creare un altro token e continuare su EvaMusic</b-modal>
+    
+    
+    <div v-if="!this.closeLoading" class="box">
+      <div class="fulfilling-bouncing-circle-spinner">
+        <div class="circle"></div>
+        <div class="orbit"></div>
+      </div>
+    </div-->
+    
     <nuxt />
+
   </div>
 </template>
 
