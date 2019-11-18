@@ -3,6 +3,7 @@
         <b-row>
             
             <b-col class="container-card" xl="2" lg="2" md="4" sm="6" v-for="index in cards" :key="'item'+index.id">
+                
                 <div class="container-playlist">
                     <div v-if="renderCategory" @click="goToPageCategory(index.id)">
                         <img class="img-cover" :src="((!!index.icons && index.icons.length) ? index.icons[0].url : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg')">

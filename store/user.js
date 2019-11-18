@@ -10,7 +10,6 @@ export const state = () => ({
   export const mutations = {
     setUser(state,string){
            state.user = string
-           this.$cookies.set("user", state.user); 
     }
   }
   export const action = {

@@ -8,21 +8,25 @@
         <b-col cols="1"></b-col>
   </b-row>
     <b-row v-for="(category, i) in categoriesToList" :key="'category_' + i">
+        
       <b-col cols="1" ></b-col>
         <b-col cols="10" class="content">
             <div class="content-text">
-            <h2>{{ category.name }}
+            <h2>{{i}}-{{ category.name }}
                 <span class="infocontent-rightside">
                     <h6><nuxt-link :to="'/genre/'+category.id">View All</nuxt-link></h6>
                 </span>
             </h2>
         </div>
-        <span v-if="allCategoryShow">
-
-            <render :cards="allCategoryShow[i]"/>
+        <span v-if="allCategoryShow[i]">
+         <render :cards="allCategoryShow[i]"/>
+        </span>
+        <span v-else>
+            error
         </span>
         </b-col>
         <b-col cols="1"></b-col>
+    
   </b-row> 
 </b-container>
 </div>
@@ -66,11 +70,6 @@ export default {
             }
         }
     },
-    async mounted(){
-        if(this.token && this.token.length) {
-               await this.fetchCategories()
-            }
-    },
     methods:{
     capitalize(str) {
             var strVal = '';
@@ -80,10 +79,10 @@ export default {
         }
     return strVal
 },
-fetchCategories() {
-    this.$axios({
+async fetchCategories() {
+    await this.$axios({
                     method:'get',
-                    url:'https://api.spotify.com/v1/browse/categories?limit=30',
+                    url:'https://api.spotify.com/v1/browse/categories?limit=40',
                     headers: {
                         'Accept': 'application/json',
                         'Authorization': 'Bearer ' + this.token
@@ -91,8 +90,8 @@ fetchCategories() {
                     })
                     .then(data=>{
                         this.categoriesToList = data.data.categories.items
-                        data.data.categories.items.forEach(el=>{
-                            this.$axios({
+                        data.data.categories.items.forEach(async el=>{
+                            await this.$axios({
                     method:'get',
                     url:'https://api.spotify.com/v1/browse/categories/'+el.id+'/playlists?limit=6',
                     headers: {
