@@ -8,26 +8,21 @@
         <b-col cols="1"></b-col>
   </b-row>
     <b-row v-for="(category, i) in categoriesToList" :key="'category_' + i">
-        
-      <b-col cols="1" ></b-col>
-        <b-col cols="10" class="content">
-            <div class="content-text">
-            <h2>{{i}}-{{ category.name }}
-                <span class="infocontent-rightside">
-                    <h6><nuxt-link :to="'/genre/'+category.id">View All</nuxt-link></h6>
-                </span>
-            </h2>
-        </div>
-        <span v-if="allCategoryShow[i]">
-         <render :cards="allCategoryShow[i]"/>
-        </span>
-        <span v-else>
-            error
-        </span>
-        </b-col>
-        <b-col cols="1"></b-col>
-    
-  </b-row> 
+        <b-col cols="1" ></b-col>
+            <b-col cols="10" class="content">
+                <div class="content-text">
+                <h2>{{ category.name }}
+                    <span class="infocontent-rightside">
+                        <h6><nuxt-link :to="'/genre/'+category.id">View All</nuxt-link></h6>
+                    </span>
+                </h2>
+            </div>
+            <span v-if="allCategoryShow[i]">
+                <render :cards="allCategoryShow[i]"/>
+            </span>
+            </b-col>
+            <b-col cols="1"></b-col>
+    </b-row> 
 </b-container>
 </div>
 </template>
@@ -70,6 +65,9 @@ export default {
             }
         }
     },
+    mounted(){
+        this.fetchCategories()
+    },
     methods:{
     capitalize(str) {
             var strVal = '';
@@ -81,36 +79,39 @@ export default {
 },
 async fetchCategories() {
     await this.$axios({
-                    method:'get',
-                    url:'https://api.spotify.com/v1/browse/categories?limit=40',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer ' + this.token
-                    }
-                    })
-                    .then(data=>{
-                        this.categoriesToList = data.data.categories.items
-                        data.data.categories.items.forEach(async el=>{
-                            await this.$axios({
-                    method:'get',
-                    url:'https://api.spotify.com/v1/browse/categories/'+el.id+'/playlists?limit=6',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer ' + this.token
-                    }
-                    })
-                    .then(el=>{
-                         this.allCategoryShow.push(el.data.playlists.items)
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    })
-                        }) 
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    })
-                    console.log("ok")
+        method:'get',
+        url:'https://api.spotify.com/v1/browse/categories?limit=6',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + this.token
+        }
+    })
+    .then(async data=>{
+        this.categoriesToList = data.data.categories.items
+        console.log('out ', this.categoriesToList)
+        for(let i in this.categoriesToList){
+            let el = this.categoriesToList[i]
+            await this.$axios({
+                method:'get',
+                url:'https://api.spotify.com/v1/browse/categories/'+el.id+'/playlists?limit=6',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + this.token
+                }
+            })
+            .then(el=>{
+                console.log('in ',el)
+                this.allCategoryShow.push(el.data.playlists.items)
+            })
+            .catch(function(error){
+                console.log(error)
+            })
+        }
+    })
+    .catch(function(error){
+        console.log(error);
+    })
+    console.log("ok")
 
 },
     }
